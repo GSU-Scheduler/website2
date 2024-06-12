@@ -1,4 +1,4 @@
-import {getDocs, collection, doc} from 'firebase/firestore';
+import {getDocs, collection,  query, limit } from 'firebase/firestore';
 import {db} from '../config/firebase';
 import {useState, useEffect} from 'react';
 
@@ -11,7 +11,7 @@ export interface Course {
     days: string;
     ending: string;
     hours: number;
-    id: number;
+    id: string;
     instructor: string;
     room: number;
     startingTime: string;
@@ -31,8 +31,11 @@ export const FilterCourse = () => {
 
     // All firestore operations require async/await
     const getCourse = async () => {
-        const data = await getDocs(coursesRef);
-        console.log(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+        const q = query(coursesRef, limit(100));
+        const data = await getDocs(q);
+        // Destructuring the returned data, by mapping it using id:doc.id for some reason
+        setCourseList(data.docs.map((doc) => ({...doc.data(), id: doc.id})) as Course[]);
+        
     };
 
     //  We want to call the function everytime the page renders, so the function will be called once, when the component is mounted
@@ -41,7 +44,14 @@ export const FilterCourse = () => {
     }, [])
     return(
         <div>
-
+            {courseList?.map((course, key) => {
+                return(
+                    <div key={course.id}>
+                        <p>Course Title: {course.title}</p>
+                        <p>Course Building: {course.building}</p>
+                    </div>
+                )
+            })}
         </div>
     )
 };
