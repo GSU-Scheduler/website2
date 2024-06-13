@@ -31,10 +31,15 @@ export const FilterCourse = () => {
 
     // All firestore operations require async/await
     const getCourse = async () => {
-        const q = query(coursesRef, limit(100));
-        const data = await getDocs(q);
-        // Destructuring the returned data, by mapping it using id:doc.id for some reason
-        setCourseList(data.docs.map((doc) => ({...doc.data(), id: doc.id})) as Course[]);
+        try{
+            const q = query(coursesRef, limit(10));
+            const data = await getDocs(q);
+            // Destructuring the returned data, by mapping it using id:doc.id for some reason
+            setCourseList(data.docs.map((doc) => ({...doc.data(), id: doc.id})) as Course[]);
+        } catch(error) {
+            console.log(error);
+        }
+        
         
     };
 
