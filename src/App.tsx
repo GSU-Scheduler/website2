@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import Select, { MultiValue } from "react-select";
 import "./index.css";
 import Map from "./components/Map";
+import React from 'react';
+import './App.css';
+import Navbar from './components/Navbar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/Home';
+import About from './pages/About';
+import Login from './pages/Auth';        
 
 interface Option {
   value: string;
@@ -365,6 +372,16 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
+    <div className="App">
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path='/about' element={<About />}/>
+          <Route path='/login' element={<Login />}/> 
+        </Routes>
+      
+      </BrowserRouter>
     </div>
   );
 };
