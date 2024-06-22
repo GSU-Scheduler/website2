@@ -1,6 +1,7 @@
-// import {getDocs, collection,  query, limit } from 'firebase/firestore';
-// import {db} from '../config/firebase';
-import {useState, useRef, ChangeEvent, useCallback} from 'react';
+import { getDocs, collection, query, where, limit } from 'firebase/firestore';
+import { db } from '../../config/firebase';
+import { useState, useRef, ChangeEvent, useCallback, useEffect} from 'react';
+import debounce from 'lodash.debounce'; // Add lodash.debounce for debouncing the input
 
 // Defining interface to represent the returns object posts
 export interface Course {
@@ -21,80 +22,95 @@ export interface Course {
 }
 
 export const CourseAdd = () => {
-
-    // Creating a state to manage posts returned, the initial post will either null when we first have none or an array of Post
-    // const [courseList, setCourseList] = useState<Course[] | null>(null);
-    const [keyword, setKeyword] = useState<string | null>('');
-
-     // Ref to access the input element directly
+    const [courseList, setCourseList] = useState<Course[] | null>(null);
+    const [keyword, setKeyword] = useState<string>('');
+    const [filteredCourses, setFilteredCourses] = useState<Course[] | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null); // Ref to access input element
     
-    //  We select the imported db from config, and the collection posts
-    // const  coursesRef = collection(db, 'courses');
+    const coursesRef = collection(db, 'courses');
 
-    // All firestore operations require async/await
-    // const getCourse = async () => {
-    //     try{
-    //         const q = query(coursesRef, limit(10));
-    //         const data = await getDocs(q);
-    //         // Destructuring the returned data, by mapping it using id:doc.id for some reason
-    //         setCourseList(data.docs.map((doc) => ({...doc.data(), id: doc.id})) as Course[]);
-    //     } catch(error) {
-    //         console.log(error);
-    //     }
-        
-    // };
+    // Fetch courses based on keyword
+    const getCourses = async (subjectKeyword: string) => {
+        try {
+            const q = query(
+                coursesRef,
+                where('subject', '>=', subjectKeyword),
+                where('subject', '<=', subjectKeyword + '\uf8ff'),
+                limit(300) // Adjust the limit as needed
+            );
+            const data = await getDocs(q);
+            const coursesArray = (data.docs.map((doc) => ({ ...doc.data(), id: doc.id })) as Course[]);
+            setCourseList(coursesArray);
+
+            // Filter locally based on the full keyword
+            filterCourses(coursesArray, keyword);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // Debounce function for input changes
+    const debounceFetch = useCallback(
+        debounce((value: string) => {
+            const subjectKeyword = value.split(' ')[0]; // Extract subject part of the keyword
+            getCourses(subjectKeyword);
+        }, 500), []
+    );
+
+    // Function to filter courses locally based on the full keyword
+    const filterCourses = (courses: Course[], keyword: string) => {
+        const filtered = courses.filter((course) => {
+            const courseString = `${course.subject} ${course.courseNumber}`;
+            return courseString.startsWith(keyword);
+        });
+        setFilteredCourses(filtered);
+    };
 
     // Function to handle changes in the input field
     const handleChangeKeyword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        // Trim whitespace from input value
         let input = e.target.value.trim();
-
-        // Regular expression to separate letters and numbers
         const results = /^([A-Z]+)(\d.*)$/i.exec(input);
 
-        // If the regular expression matches, reformat the input
         if (results != null) {
-        const [, subject, number] = results as unknown as [
-            string,
-            string,
-            string
-        ];
-        input = `${subject} ${number}`; // Format input as 'ABC 1234'
+            const [, subject, number] = results as unknown as [string, string, string];
+            input = `${subject} ${number}`;
         }
 
-        // Update the keyword state with the formatted input
-        setKeyword(input);
-    },[]);
+        const formattedInput = input.toUpperCase();
+        setKeyword(formattedInput);
 
+        // Fetch courses based on the subject part of the formatted input
+        debounceFetch(formattedInput);
+    }, [debounceFetch]);
 
+    // Additional effect to filter the courses whenever keyword or courseList changes
+    useEffect(() => {
+        if (courseList) {
+            filterCourses(courseList, keyword || '');
+        }
+    }, [keyword, courseList]);
 
-    //  We want to call the function everytime the page renders, so the function will be called once, when the component is mounted
-    // useEffect(() => {
-    //     getCourse();
-    // }, [])
-    return(
+    return (
         <div>
-
             <input
                 type='text'
                 ref={inputRef}
                 placeholder='XXX 0000'
-                value={keyword  || ''} // Display the current keyword value
+                value={keyword || ''} // Display the current keyword value
                 onChange={handleChangeKeyword} // Handle changes in the input
                 style={{ textTransform: 'uppercase' }} // CSS to display text in uppercase
-            /> {keyword}
+            />
+            {keyword}
 
-
-            {/* {courseList?.map((course, key) => {
-                return(
-                    <div key={course.id}>
-                        <p>Course Title: {course.title}</p>
-                        <p>Course Building: {course.building}</p>
-                        <p>Course Subject: {course.subject}{course.courseNumber}</p>
+            <div className="flex flex-col items-center space-y-4">
+                {filteredCourses?.map((course) => (
+                    <div key={course.id} className='bg-emerald-400 shadow-md rounded-lg w-80 p-4 flex flex-col items-start'>
+                        <p className="font-semibold">{course.subject} {course.courseNumber}</p>
+                        <p>{course.title}</p>
+                        {/* Add additional content here */}
                     </div>
-                )
-            })} */}
+                ))}
+            </div>
         </div>
-    )
+    );
 };
