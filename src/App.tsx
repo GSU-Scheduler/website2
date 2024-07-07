@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import Select, { MultiValue } from "react-select";
 import "./index.css";
 import Map from "./components/Map";
-import React from 'react';
-import './App.css';
-import Navbar from './components/Navbar';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home } from './pages/Home';
-import About from './pages/About';
-import Login from './pages/Auth';        
+import "./App.css";
+import Navbar from "./components/Navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Home } from "./pages/Home";
+import About from "./pages/About";
+import Login from "./pages/Auth";
+import BasicCalendar from "./components/BasicCalendar";
 
 interface Option {
   value: string;
@@ -56,6 +57,14 @@ const App: React.FC = () => {
   };
 
   return (
+    <div className="h-full bg-zinc-800">
+      <div className="flex items-center min-h-[900px] justify-center h-screen">
+        <BasicCalendar />
+      </div>
+    </div>
+  );
+  {
+    /*  
     <div className="flex h-90 bg-background text-gray-200">
       <div className="w-1/6 bg-sidebar p-4 text-gray-200">
         <div className="mb-8">
@@ -286,7 +295,6 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="grid grid-cols-6 gap-4 justify-items-center">
-              {/* Empty cell */}
               <div className="col-span-1"></div>
               <div className="col-span-1 text-center font-bold">Monday</div>
               <div className="col-span-1 text-center font-bold">Tuesday</div>
@@ -372,18 +380,19 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
-    <div className="App">
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path='/about' element={<About />}/>
-          <Route path='/login' element={<Login />}/> 
-        </Routes>
-      
-      </BrowserRouter>
+      <div className="App">
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     </div>
-  );
+    */
+  }
 };
 
 export default App;
