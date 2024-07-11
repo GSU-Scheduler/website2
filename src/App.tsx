@@ -2,13 +2,9 @@ import React, { useState } from "react";
 import Select, { MultiValue } from "react-select";
 import "./index.css";
 import Map from "./components/Map";
-import React from 'react';
-import './App.css';
-import Navbar from './components/Navbar';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home } from './pages/Home';
-import About from './pages/About';
-import Login from './pages/Auth';        
+import BasicCalendar from "./components/BasicCalendar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CourseAdd } from "./components/CourseAdd";
 
 interface Option {
   value: string;
@@ -66,7 +62,7 @@ const App: React.FC = () => {
               className="mb-4 small-logo"
             />
           </div>
-          <ul className="flex space-x-4 mb-8">
+          <ul className="flex space-x-4 mb-8 justify-center">
             <li>
               <button
                 className={`block p-2 rounded ${
@@ -180,10 +176,13 @@ const App: React.FC = () => {
           {showCourses && (
             <>
               <div className="mb-8">
+                <div>
+                  <BrowserRouter></BrowserRouter>
+                </div>
                 <button className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-4">
                   Add CRN...
                 </button>
-                <label className="block mb-2">Delivery Mode</label>
+                <label htmlFor="deliveryMode">Delivery Mode</label>
                 <Select
                   isMulti
                   value={selectedOptions}
@@ -269,119 +268,19 @@ const App: React.FC = () => {
             </button>
           </div>
         </header>
+
         <div className="flex">
-          <div className="w-3/4 bg-white text-black p-4 rounded-lg shadow-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">0 Credits</h2>
-              <div className="flex items-center flex-grow space-x-2 justify-center">
-                <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded">
-                  {"<"}
-                </button>
-                <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded">
-                  Spring Semester
-                </button>
-                <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded">
-                  {">"}
-                </button>
-              </div>
+          <div className="w-3/4 h-[800px] bg-gray-300 text-black p-4 rounded-lg shadow-lg">
+            <div className="flex justify-center">
+              <BasicCalendar />
             </div>
-            <div className="grid grid-cols-6 gap-4 justify-items-center">
-              {/* Empty cell */}
-              <div className="col-span-1"></div>
-              <div className="col-span-1 text-center font-bold">Monday</div>
-              <div className="col-span-1 text-center font-bold">Tuesday</div>
-              <div className="col-span-1 text-center font-bold">Wednesday</div>
-              <div className="col-span-1 text-center font-bold">Thursday</div>
-              <div className="col-span-1 text-center font-bold">Friday</div>
-              {Array.from({ length: 12 }, (_, hour) => (
-                <React.Fragment key={hour}>
-                  <div className="col-span-1 border border-gray-300 h-16">
-                    <div className="flex justify-center items-center h-full">
-                      {formatTime(hour + 8)}
-                    </div>
-                  </div>
-                  <div className="col-span-1 border border-gray-300 h-16">
-                    {events.map((event) =>
-                      event.day === "Monday" && event.startHour === hour + 8 ? (
-                        <div
-                          key={event.id}
-                          className="h-full bg-blue-500 text-white px-2 py-1 rounded"
-                        >
-                          {event.title}
-                        </div>
-                      ) : null
-                    )}
-                  </div>
-                  <div className="col-span-1 border border-gray-300 h-16">
-                    {events.map((event) =>
-                      event.day === "Tuesday" &&
-                      event.startHour === hour + 8 ? (
-                        <div
-                          key={event.id}
-                          className="h-full bg-blue-500 text-white px-2 py-1 rounded"
-                        >
-                          {event.title}
-                        </div>
-                      ) : null
-                    )}
-                  </div>
-                  <div className="col-span-1 border border-gray-300 h-16">
-                    {events.map((event) =>
-                      event.day === "Wednesday" &&
-                      event.startHour === hour + 8 ? (
-                        <div
-                          key={event.id}
-                          className="h-full bg-blue-500 text-white px-2 py-1 rounded"
-                        >
-                          {event.title}
-                        </div>
-                      ) : null
-                    )}
-                  </div>
-                  <div className="col-span-1 border border-gray-300 h-16">
-                    {events.map((event) =>
-                      event.day === "Thursday" &&
-                      event.startHour === hour + 8 ? (
-                        <div
-                          key={event.id}
-                          className="h-full bg-blue-500 text-white px-2 py-1 rounded"
-                        >
-                          {event.title}
-                        </div>
-                      ) : null
-                    )}
-                  </div>
-                  <div className="col-span-1 border border-gray-300 h-16">
-                    {events.map((event) =>
-                      event.day === "Friday" && event.startHour === hour + 8 ? (
-                        <div
-                          key={event.id}
-                          className="h-full bg-blue-500 text-white px-2 py-1 rounded"
-                        >
-                          {event.title}
-                        </div>
-                      ) : null
-                    )}
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
+            <div className="grid grid-cols-6 gap-4 justify-items-center"></div>
           </div>
           <div className="w-1/4 bg-gray-300 p-4 rounded-lg shadow-lg ml-4">
             <Map />
           </div>
         </div>
       </div>
-    <div className="App">
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path='/about' element={<About />}/>
-          <Route path='/login' element={<Login />}/> 
-        </Routes>
-      
-      </BrowserRouter>
     </div>
   );
 };

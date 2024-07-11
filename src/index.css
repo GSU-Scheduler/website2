@@ -46,3 +46,19 @@ body {
   background-color: #ccc;
   border: 1px solid #000;
 }
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
