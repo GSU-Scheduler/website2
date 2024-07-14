@@ -1,25 +1,9 @@
-
 import { getDocs, collection, query, where, limit } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useState, useRef, ChangeEvent, useCallback, useEffect, useMemo } from 'react';
 import debounce from 'lodash.debounce';
+import { Course } from '../../types/types';
 
-export interface Course {
-    building: string;
-    campus: string;
-    classType: string;
-    courseNumber: number;
-    days: string;
-    ending: string;
-    hours: number;
-    id: string;
-    instructor: string;
-    room: number;
-    startingTime: string;
-    subject: string;
-    time: string;
-    title: string;
-}
 
 export const CourseAdd = () => {
     const [courseList, setCourseList] = useState<Course[]>([]);
@@ -126,9 +110,11 @@ export const CourseAdd = () => {
 
     const memoizedCourses = useMemo(() => filteredCourses, [filteredCourses]);
 
+    console.log(courseList);
+
     return (
-        <div className='bg-blue-200 w-2/5'>
-            <div className='border-black'>
+        <div className='w-2/5'>
+            <div className='flex border-black h-16 m-4 flex-col'>
                 <input
                     type='text'
                     ref={inputRef}
@@ -136,7 +122,7 @@ export const CourseAdd = () => {
                     value={keyword || ''}
                     onChange={handleChangeKeyword}
                     style={{ textTransform: 'uppercase' }}
-                    className='w-full bg-gray-500'
+                    className='w-1/2 bg-gray-500 h-full rounded'
                 />
                 {loading && <p>Loading...</p>}
                 {error && <p>{error}</p>}
@@ -145,58 +131,51 @@ export const CourseAdd = () => {
                 )}
             </div>
 
-            <div className="flex flex-col items-center space-y-4">
+
+            <div className='flex flex-col items-start m-4'>
+                <div>
+                    <label htmlFor="deliveryMode">Delivery Mode: </label>
+                    <select id="deliveryMode">
+                        <option>Asynchronous Online Instruct</option>
+                        <option>Face to Face - Instruction</option>
+                        <option>Hybird/Partially Online</option>
+                        <option>Synchronous Online</option>
+
+                    </select>               
+                </div>
+
+                <div>
+                    <label htmlFor="campus">Campus: </label>
+                    <select name="" id="">
+                        <option>Alpharetta</option>
+                        <option>Clarkston</option>
+                        <option>Decatur</option>
+                        <option>Dunwoody</option>
+                        <option>Newton</option>
+                        <option>Atlanta</option>
+                    </select>
+                </div>
+
+            </div>
+
+            
+
+            <div className="flex flex-col items-start space-y-4 m-4">
                 {memoizedCourses.map((course) => (
-                    <div key={course.id} className='bg-emerald-400 shadow-md rounded-lg w-80 p-4 flex flex-col items-start'>
+                    <div key={course.id} className='bg-emerald-400 shadow-md rounded-lg w-120 p-4 flex flex-col items-start'>
                         <p className="font-semibold">{course.subject} {course.courseNumber}</p>
                         <p>{course.title}</p>
-                        <p>{course.time}</p>
-                        <p>{course.building}</p>
+                        <p>Class Type: {course.classType}</p>
+                        <p>Time: {course.time}</p>
+                        <p>Location: {course.building}, Room: {course.room}</p>
                         <p>Campus: {course.campus}</p>
-                        <p>{course.instructor}</p>
+                        <p>Instructor: {course.instructor ? course.instructor: 'TBA'}</p>
+                        <p>Lab Time: {course.labDay ? course.labDay : 'N/A'}</p>
                     </div>
                 ))}
             </div>
 
-            <div>
-                <label htmlFor="deliveryMode">Delivery Mode</label>
-                <select id="deliveryMode">
-                    <option>Art Signature Experience</option>
-                    <option>Asynchronous Online Instruct</option>
-                    <option>City Signature Experience</option>
-                    <option>Critical Thinking Through Writing</option>
-                    <option>EPIC Interdisciplinary Program</option>
-                    <option>Face to Face - Instruction</option>
-                    <option>Global Scholar</option>
-                    <option>FLC Bench Course</option>
-                    <option>Global Signature Experience</option>
-                    <option>Honors College</option>
-                    <option>Hybird/Partially Online</option>
-                    <option>Low Cost:$40 or under req cost</option>
-                    <option>No-cost $0 required costs</option>
-                    <option>Non-Freshman Learning Comm</option>
-                    <option>Panther Gateway Course</option>
-                    <option>PC Global Scholar</option>
-                    <option>Professional Signature Exp</option>
-                    <option>Research Signature Experience</option>
-                    <option>Service Signature Experience</option>
-                    <option>Synchronous Online</option>
-                    <option>Virtual Exchange Course</option>
-                    <option>Women Lead Program</option>
-                </select>               
-            </div>
-
-            <div>
-                <p>Campus</p>
-                <select name="" id="">
-                    <option>Alpharetta</option>
-                    <option>Clarkston</option>
-                    <option>Decatur</option>
-                    <option>Dunwoody</option>
-                    <option>Newton</option>
-                    <option>Atlanta</option>
-                </select>
-            </div>
+            
         </div>
     );
 };
