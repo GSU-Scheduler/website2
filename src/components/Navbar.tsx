@@ -6,6 +6,7 @@ const Navbar = () => {
             <div className="flex justify-center flex-grow">
                 <Link to="/" className="text-white text-base mx-4 transition-colors duration-300 hover:text-blue-500">Home</Link>
                 <Link to="/about" className="text-white text-base mx-4 transition-colors duration-300 hover:text-blue-500">About</Link>
+                <Link to="/auth" className="text-white text-base mx-4 transition-colors duration-300 hover:text-blue-500">Login</Link>
             </div>
         </nav>
     );
