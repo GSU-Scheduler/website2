@@ -24,7 +24,7 @@ dayjs.extend(customParseFormat);
 interface Event {
   id: number;
   title: string;
-  days: Option[];
+  days: typeof Option[];
   startTime: string;
   endTime: string;
 }

@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Select, { MultiValue } from "react-select";
 import "./index.css";
 import Map from "./components/Map";
@@ -293,14 +292,6 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="h-full bg-zinc-800">
-      <div className="flex items-center min-h-[900px] justify-center h-screen">
-        <BasicCalendar />
-      </div>
-    </div>
-  );
-  {
-    /*  
     <div className="flex h-90 bg-background text-gray-200">
       <div className="w-1/6 bg-sidebar p-4 text-gray-200">
         <div className="mb-8">
@@ -603,8 +594,7 @@ const App: React.FC = () => {
         </div>
       </div>
     </div>
-    */
-  }
+  );
 };
 
 export default App;
