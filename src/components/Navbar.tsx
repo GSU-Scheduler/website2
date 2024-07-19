@@ -1,22 +1,24 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa';
-import './Navbar.css';
+import { Link } from "react-router-dom";
 
-const Navbar: React.FC = () => {
-    return (
-        <nav className="navbar">
-            <div className="navbar-links">
-                <Link to="/">Home</Link>
-                <Link to="/about">About</Link>
-            </div>
-            <div className="navbar-profile">
-                <Link to="/login">
-                    <FaUserCircle size={30} />
-                </Link>
-            </div>
-        </nav>
-    );
+const Navbar = () => {
+  return (
+    <nav className="flex justify-between items-center bg-gray-800 text-white p-4">
+      <div className="flex justify-center flex-grow">
+        <Link
+          to="/"
+          className="text-white text-base mx-4 transition-colors duration-300 hover:text-blue-500"
+        >
+          Home
+        </Link>
+        <Link
+          to="/about"
+          className="text-white text-base mx-4 transition-colors duration-300 hover:text-blue-500"
+        >
+          About
+        </Link>
+      </div>
+    </nav>
+  );
 };
 
 export default Navbar;

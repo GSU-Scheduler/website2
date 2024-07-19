@@ -1,3 +1,4 @@
+import React from "react";
 import dayjs from "dayjs";
 import { dayjsLocalizer } from "react-big-calendar";
 import Calendar from "../Calendar";
@@ -19,6 +20,19 @@ dayjs.extend(customParseFormat);
 // Array of event objects with start time, end time, and title.
 // Calendar receives events prop
 // TODO: event state
+
+interface Event {
+  id: number;
+  title: string;
+  days: Option[];
+  startTime: string;
+  endTime: string;
+}
+
+interface BasicCalendarProps {
+  events: Event[];
+}
+
 const events = [
   {
     // first way of parsing times using dayjs
@@ -138,12 +152,18 @@ const components = {
 
 export default function BasicCalendar() {
   return (
-    <section className="flex flex-col w-4/6 h-[900px] bg-gray-100 rounded-3xl overflow-hidden overflow-y-auto">
-      <div className="flex h-24 py-6 justify-center items-center relative">
+    <section className="flex flex-col w-[1100px] h-[769px] bg-gray-100 rounded-3xl overflow-hidden">
+      <div className="flex h-2 py-6 justify-center items-center relative">
         <div className="absolute hidden sm:block left-0 ml-6 py-2 px-4 rounded-2xl text-xs border-2 shadow-md bg-transparent font-semibold">
           0 Credits
         </div>
-        <h2 className="font-semibold tracking-wide">Spring Semester</h2>
+        <button className="bg-gray-300 text-gray-700 px-4 py-1.5 rounded">
+          {"<"}
+        </button>
+        <h2 className="font-semibold tracking-wide mx-4">Spring Semester</h2>
+        <button className="bg-gray-300 text-gray-700 px-4 py-1.5 rounded">
+          {">"}
+        </button>
       </div>
       <div className="bg-gray-100 h-[100%]">
         <DnDCalendar
