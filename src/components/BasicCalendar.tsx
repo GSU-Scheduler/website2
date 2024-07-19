@@ -1,3 +1,4 @@
+import React from "react";
 import dayjs from "dayjs";
 import { dayjsLocalizer } from "react-big-calendar";
 import Calendar from "../Calendar";
@@ -19,6 +20,19 @@ dayjs.extend(customParseFormat);
 // Array of event objects with start time, end time, and title.
 // Calendar receives events prop
 // TODO: event state
+
+interface Event {
+  id: number;
+  title: string;
+  days: Option[];
+  startTime: string;
+  endTime: string;
+}
+
+interface BasicCalendarProps {
+  events: Event[];
+}
+
 const events = [
   {
     // first way of parsing times using dayjs

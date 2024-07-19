@@ -5,11 +5,13 @@ import "./index.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 reportWebVitals();

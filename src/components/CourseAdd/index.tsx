@@ -142,7 +142,7 @@ export const CourseAdd = () => {
 
   return (
     <div className="bg-blue-200 w-2/5">
-      <div className="">
+      <div className="border-black">
         <input
           type="text"
           ref={inputRef}
