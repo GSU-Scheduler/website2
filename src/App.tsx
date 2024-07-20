@@ -582,13 +582,13 @@ const App: React.FC = () => {
         </header>
 
         <div className="flex">
-          <div className="w-3/4 h-[800px] bg-gray-300 text-black p-4 rounded-lg shadow-lg">
+          <div className="w-3/4 text-black ">
             <div className="flex justify-center">
               <BasicCalendar />
             </div>
             <div className="grid grid-cols-6 gap-4 justify-items-center"></div>
           </div>
-          <div className="w-1/4 bg-gray-300 p-4 rounded-lg shadow-lg ml-4">
+          <div className="w-1/4 bg-gray-300 rounded-3xl shadow-lg ml-4">
             <Map />
           </div>
         </div>

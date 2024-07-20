@@ -153,15 +153,15 @@ const components = {
 export default function BasicCalendar() {
   return (
     <section className="flex flex-col w-[1100px] h-[769px] bg-gray-100 rounded-3xl overflow-hidden">
-      <div className="flex h-2 py-6 justify-center items-center relative">
+      <div className="flex p-6 justify-center items-center relative">
         <div className="absolute hidden sm:block left-0 ml-6 py-2 px-4 rounded-2xl text-xs border-2 shadow-md bg-transparent font-semibold">
           0 Credits
         </div>
-        <button className="bg-gray-300 text-gray-700 px-4 py-1.5 rounded">
+        <button className="bg-gray-300 text-gray-700 px-2 rounded">
           {"<"}
         </button>
         <h2 className="font-semibold tracking-wide mx-4">Spring Semester</h2>
-        <button className="bg-gray-300 text-gray-700 px-4 py-1.5 rounded">
+        <button className="bg-gray-300 text-gray-700 px-2 rounded">
           {">"}
         </button>
       </div>
