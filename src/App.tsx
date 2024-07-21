@@ -10,6 +10,7 @@ import { db } from "./config/firebase";
 import { useRef, ChangeEvent, useCallback, useEffect, useMemo } from "react";
 import debounce from "lodash.debounce";
 import TimeInput from "./TimeInput";
+import dayjs from "dayjs";
 
 export interface Course {
   building: string;
@@ -33,12 +34,19 @@ interface Option {
   label: string;
 }
 
+// interface Event {
+//   id: number;
+//   title: string;
+//   days: Option[];
+//   startTime: string;
+//   endTime: string;
+// }
 interface Event {
   id: number;
   title: string;
   days: Option[];
-  startTime: string;
-  endTime: string;
+  start: Object;
+  end: Object;
 }
 
 const App: React.FC = () => {
@@ -82,6 +90,23 @@ const App: React.FC = () => {
     console.log("Title:", title);
     console.log("Days:", days_events);
 
+    const newEventDay = () => {
+      switch (days_events[0].value) {
+        case "Monday":
+          return 1;
+        case "Tuesday":
+          return 2;
+        case "Wednesday":
+          return 3;
+        case "Thursday":
+          return 4;
+        case "Friday":
+          return 5;
+        default:
+          return 1;
+      }
+    }
+
     // Log the selected start and end times
     console.log(
       "Start Time:",
@@ -91,12 +116,19 @@ const App: React.FC = () => {
     );
     console.log("End Time:", endTime.hour, endTime.minute, endTime.period);
 
+    // const newEvent: Event = {
+    //   id: events.length + 1,
+    //   title: title,
+    //   days: days_events as Option[],
+    //   startTime: `${startTime.hour}:${startTime.minute} ${startTime.period}`,
+    //   endTime: `${endTime.hour}:${endTime.minute} ${endTime.period}`,
+    // };
     const newEvent: Event = {
       id: events.length + 1,
       title: title,
       days: days_events as Option[],
-      startTime: `${startTime.hour}:${startTime.minute} ${startTime.period}`,
-      endTime: `${endTime.hour}:${endTime.minute} ${endTime.period}`,
+      start: dayjs(`${startTime.hour}:${startTime.minute}`, "H:m").day(newEventDay()).toDate(),
+      end: dayjs(`${endTime.hour}:${endTime.minute}`, "H:m").day(newEventDay()).toDate(),
     };
 
     console.log("New Event:", newEvent); // Log the new event object
@@ -584,7 +616,7 @@ const App: React.FC = () => {
         <div className="flex">
           <div className="w-3/4 text-black ">
             <div className="flex justify-center">
-              <BasicCalendar />
+              <BasicCalendar calendarEvents={events}/>
             </div>
             <div className="grid grid-cols-6 gap-4 justify-items-center"></div>
           </div>
