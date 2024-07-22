@@ -1,20 +1,4 @@
-// export interface Course {
-//     building: string;
-//     campus: string;
-//     classType: string;
-//     courseNumber: number;
-//     days: string;
-//     ending: string;
-//     hours: number;
-//     id: string;
-//     instructor: string;
-//     room: number;
-//     startingTime: string;
-//     subject: string;
-//     time: string;
-//     title: string;
-// }
-export interface Course {
+export interface  SpecificCourse{
     building: string;
     campus: string;
     classType: string;
@@ -43,4 +27,9 @@ export interface Course {
     subject: string;
     time: string;
     title: string;
+}
+
+export interface Course {
+    ids: string;
+    subject_course: string; 
 }
