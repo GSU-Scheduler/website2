@@ -1,4 +1,4 @@
-export interface  SpecificCourse{
+export interface  SpecificCourse {
     building: string;
     campus: string;
     classType: string;

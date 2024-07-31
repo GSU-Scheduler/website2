@@ -103,7 +103,7 @@ export const CourseAdd = () => {
 
     return (
         <div className='w-2/5'>
-            <div className='flex border-black h-16 m-4 flex-col '>
+            <div className=''>
                 <input
                     type='text'
                     ref={inputRef}
@@ -111,11 +111,11 @@ export const CourseAdd = () => {
                     value={keyword || ''}
                     onChange={handleChangeKeyword}
                     style={{ textTransform: 'uppercase' }}
-                    className='w-1/2 bg-gray-500 h-full rounded'
+                    className=''
                 />
             </div>
 
-            <div className='flex flex-col items-start m-4'>
+            <div className=''>
                 <div>
                     <label htmlFor="deliveryMode">Delivery Mode: </label>
                     <select id="deliveryMode">
@@ -139,7 +139,7 @@ export const CourseAdd = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col items-start space-y-4 m-4">
+            <div className="">
                 {memoizedCourses.map((course) => (
                     <div key={course.ids} className='bg-emerald-400 shadow-md rounded-lg w-120 p-4 flex flex-col items-start'>
                         <p className="font-semibold">{course.subject_course}</p>

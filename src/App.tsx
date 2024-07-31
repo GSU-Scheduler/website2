@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar/Navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home } from './pages/Home';
-import About from './pages/About';
+import { Home } from './pages/home';
+import About from './pages/about';
+import Footer from './components/Footer/Footer';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path='/about' element={<About />}/>
         </Routes>
+        <Footer/> 
       
       </BrowserRouter>
     </div>
