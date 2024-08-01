@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    justify-content: stretch;
+    height: 90vh;
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+.section1, .section2, .section3 {
+    display: flex;
+    flex-direction: column;
+}
+
+.section1 {
+    flex-grow: 1;
+}
+
+.section2 {
+    flex-grow: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    overflow-y: auto; /* Make section2 scrollable */
+}
+
+.section3 {
+    flex-grow: 1;
+}

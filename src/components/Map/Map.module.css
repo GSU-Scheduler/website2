@@ -1,0 +1,5 @@
+.container{
+    background-color: lightpink;
+    height:100%;
+    border: 1px solid black; /* Add a border to the table */
+}

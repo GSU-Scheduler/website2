@@ -2,7 +2,10 @@ import { getDocs, collection, query, where, limit } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useState, useRef, ChangeEvent, useCallback, useEffect, useMemo } from 'react';
 import debounce from 'lodash.debounce';
-import { Course } from '../../types/types';
+import { Course } from '../../types';
+import styles from './CourseAdd.module.css';
+import { CAMPUSES, DELIVERY_MODES } from '../../constants';
+import {CourseFilter} from '../CourseFilter/CourseFilter';
 
 export const CourseAdd = () => {
     const [courseList, setCourseList] = useState<Course[]>([]);
@@ -102,20 +105,38 @@ export const CourseAdd = () => {
     console.log(courseList);
 
     return (
-        <div className='w-2/5'>
+        <div className={styles.container}>
             <div className=''>
-                <input
-                    type='text'
-                    ref={inputRef}
-                    placeholder='+ XXX 0000'
-                    value={keyword || ''}
-                    onChange={handleChangeKeyword}
-                    style={{ textTransform: 'uppercase' }}
-                    className=''
-                />
+                <div>
+                    <input
+                        type='text'
+                        ref={inputRef}
+                        placeholder='+ XXX 0000'
+                        value={keyword || ''}
+                        onChange={handleChangeKeyword}
+                        style={{ textTransform: 'uppercase' }}
+                        className=''
+                    />
+
+                </div>
+
+                {[
+                    ['Delivery Mode', 'deliveryMode', DELIVERY_MODES] as const,
+                    ['Campus', 'campus', CAMPUSES] as const,
+                    ].map(([name, property, labels]) => (
+                    <CourseFilter
+                        key={property}
+                        // name={name}
+                        // labels={labels}
+                        // selectedTags={filter[property]}
+                        // onReset={(): void => handleResetFilter(property)}
+                        // onToggle={(tag): void => handleToggleFilter(property, tag)}
+                    />
+                    ))}
+               
             </div>
 
-            <div className=''>
+            {/* <div className=''>
                 <div>
                     <label htmlFor="deliveryMode">Delivery Mode: </label>
                     <select id="deliveryMode">
@@ -137,7 +158,8 @@ export const CourseAdd = () => {
                         <option>Atlanta</option>
                     </select>
                 </div>
-            </div>
+            </div> */}
+
 
             <div className="">
                 {memoizedCourses.map((course) => (

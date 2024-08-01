@@ -5,8 +5,20 @@
 
 
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-  }
-  
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+}
+
+th {
+  width: 120px;
+  padding-top:25px;
+  padding-bottom:30px;
+}
+
+td {
+  padding: 5px;
+  border: 1px solid black; /* Add a border to the table cells */
+  height: 65px;
+} 
