@@ -32,4 +32,5 @@ export interface  SpecificCourse {
 export interface Course {
     ids: string;
     subject_course: string; 
+    title: string;
 }

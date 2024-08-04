@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 import { Course } from '../../types';
 import styles from './CourseAdd.module.css';
 import { CAMPUSES, DELIVERY_MODES } from '../../constants';
-import {CourseFilter} from '../CourseFilter/CourseFilter';
+import { CourseFilter } from '../CourseFilter/CourseFilter';
 
 export const CourseAdd = () => {
     const [courseList, setCourseList] = useState<Course[]>([]);
@@ -17,6 +17,7 @@ export const CourseAdd = () => {
 
     const getCourses = async (subjectKeyword: string) => {
         try {
+            // Check if the input is empty, clear the lists
             if (subjectKeyword === '') {
                 console.log('Empty subjectKeyword, clearing lists');
                 setCourseList([]);
@@ -45,6 +46,11 @@ export const CourseAdd = () => {
                 console.log('debounceFetch called with:', value);
                 const subjectKeyword = value.split(' ')[0];
                 getCourses(subjectKeyword);
+            } else {
+                // Clear courses when the input is empty
+                console.log('Input is empty in debounceFetch, clearing lists');
+                setCourseList([]);
+                setFilteredCourses([]);
             }
         }, 500),
         []
@@ -75,30 +81,38 @@ export const CourseAdd = () => {
         let input = e.target.value.trim();
         console.log('handleChangeKeyword called with:', input);
         const results = /^([A-Z]+)(\d.*)$/i.exec(input);
-
+    
         if (results != null) {
             const [, subject, number] = results as unknown as [string, string, string];
             input = `${subject} ${number}`;
         }
-
+    
         const formattedInput = input.toUpperCase();
         setKeyword(formattedInput);
         console.log('Formatted input:', formattedInput);
-
+    
         if (formattedInput === '') {
             console.log('Input is empty, clearing lists');
-            setCourseList([]);
-            setFilteredCourses([]);
+            setCourseList([]); // Make sure this state is cleared
+            setFilteredCourses([]); // Make sure this state is cleared
         } else {
             debounceFetch(formattedInput);
         }
     }, [debounceFetch]);
-
+    
     useEffect(() => {
-        if (courseList.length > 0) {
-            debounceFilter(courseList, keyword || '');
+        // Debugging the states
+        console.log('Current keyword:', keyword);
+        console.log('Current course list:', courseList);
+    
+        if (keyword !== '' && courseList.length > 0) {
+            debounceFilter(courseList, keyword);
+        } else {
+            console.log('No keyword or no courses, clearing filtered courses');
+            setFilteredCourses([]); // Ensure the filtered list is cleared when keyword is empty
         }
     }, [keyword, courseList]);
+    
 
     const memoizedCourses = useMemo(() => filteredCourses, [filteredCourses]);
 
@@ -106,8 +120,8 @@ export const CourseAdd = () => {
 
     return (
         <div className={styles.container}>
-            <div className=''>
-                <div>
+            <div>
+                <div className='flex border-black h-16 m-4 flex-col '>
                     <input
                         type='text'
                         ref={inputRef}
@@ -115,53 +129,27 @@ export const CourseAdd = () => {
                         value={keyword || ''}
                         onChange={handleChangeKeyword}
                         style={{ textTransform: 'uppercase' }}
-                        className=''
+                        className='w-1/2 bg-gray-500 h-full rounded'
                     />
-
                 </div>
 
                 {[
                     ['Delivery Mode', 'deliveryMode', DELIVERY_MODES] as const,
                     ['Campus', 'campus', CAMPUSES] as const,
-                    ].map(([name, property, labels]) => (
+                ].map(([name, property, labels]) => (
                     <CourseFilter
                         key={property}
+                        // Uncomment and implement the following props as needed:
                         // name={name}
                         // labels={labels}
                         // selectedTags={filter[property]}
                         // onReset={(): void => handleResetFilter(property)}
                         // onToggle={(tag): void => handleToggleFilter(property, tag)}
                     />
-                    ))}
-               
+                ))}
             </div>
 
-            {/* <div className=''>
-                <div>
-                    <label htmlFor="deliveryMode">Delivery Mode: </label>
-                    <select id="deliveryMode">
-                        <option>Asynchronous Online Instruct</option>
-                        <option>Face to Face - Instruction</option>
-                        <option>Hybrid/Partially Online</option>
-                        <option>Synchronous Online</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="campus">Campus: </label>
-                    <select id="campus">
-                        <option>Alpharetta</option>
-                        <option>Clarkston</option>
-                        <option>Decatur</option>
-                        <option>Dunwoody</option>
-                        <option>Newton</option>
-                        <option>Atlanta</option>
-                    </select>
-                </div>
-            </div> */}
-
-
-            <div className="">
+            <div className="flex flex-col items-start space-y-4 m-4">
                 {memoizedCourses.map((course) => (
                     <div key={course.ids} className='bg-emerald-400 shadow-md rounded-lg w-120 p-4 flex flex-col items-start'>
                         <p className="font-semibold">{course.subject_course}</p>
