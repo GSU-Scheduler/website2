@@ -3,3 +3,16 @@
     border: 1px solid black; /* Add a border to the table */
     overflow-y: auto; 
 }
+
+.courses{
+    cursor: pointer;
+}
+
+.dropdown{
+    cursor: pointer;
+    
+}
+
+.course{
+    border:solid 1px black;
+}

@@ -34,3 +34,10 @@ export interface Course {
     subject_course: string; 
     title: string;
 }
+
+export type ClassInfo = {
+    name: string;
+    startTime: string;
+    endTime: string;
+    days: string[];
+  };

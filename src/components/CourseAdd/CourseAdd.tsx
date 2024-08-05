@@ -6,6 +6,7 @@ import { Course } from '../../types';
 import styles from './CourseAdd.module.css';
 import { CAMPUSES, DELIVERY_MODES } from '../../constants';
 import { CourseFilter } from '../CourseFilter/CourseFilter';
+import SelectedCourse from '../SelectedCourse/SelectedCourse';
 
 export const CourseAdd = () => {
     const [courseList, setCourseList] = useState<Course[]>([]);
@@ -118,10 +119,76 @@ export const CourseAdd = () => {
 
     console.log(courseList);
 
+
+    const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedItem, setSelectedItem] = useState<Course | null>(null);
+    const [showDetails, setShowDetails] = useState(false);
+
+    const [detailsVisibility, setDetailsVisibility] = useState<{ [key: string]: boolean }>({});
+
+    const handleSelectItem = (course: Course) => {
+        // Check if the course is already added
+        if (!selectedCourses.some(selected => selected.ids === course.ids)) {
+            setSelectedCourses(prev => [...prev, course]);
+        }
+        setSelectedItem(course);
+        setSearchResults([]); // Clear search results or keep depending on behavior you want
+        setShowDetails(false); // Reset details view
+      };
+
+    // const toggleDetails = () => {
+    //     setShowDetails(!showDetails);
+    // };
+
+    const toggleDetails = (id: string) => {
+        setDetailsVisibility(prev => ({
+          ...prev,
+          [id]: !prev[id]
+        }));
+      };
+
+    const handleRemoveCourse = (id: string) => {
+        setSelectedCourses(courses => courses.filter(course => course.ids !== id));
+    };
+
     return (
         <div className={styles.container}>
             <div>
-                <div className='flex border-black h-16 m-4 flex-col '>
+
+                {/* {selectedItem && (
+                    <div>
+                    <h4 className={styles.dropdown} onClick={toggleDetails }>{selectedItem.title}<span>&#9660;</span></h4>
+                    {showDetails && (
+                        // // <p>Instructor: {selectedItem.instructor}</p>
+                        // <p className="font-semibold">{selectedItem.subject_course}</p>
+                        <SelectedCourse course={selectedItem} />
+                    )}
+                    </div>
+                )} */}
+
+                <div>
+                    {selectedCourses.map(course => (
+                        <div key={course.ids} className={styles.course}>
+                            <h4 className={styles.dropdown} onClick={() => toggleDetails(course.ids)}>
+                                {course.subject_course}<span>&#9660;</span>
+                                
+                            </h4>
+                            <h4>{course.title}</h4>
+                            {detailsVisibility[course.ids] && (
+                                <SelectedCourse course={course} />
+                            )}
+
+                            <button 
+                                onClick={() => handleRemoveCourse(course.ids)} 
+                                className={styles.deleteButton}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    ))}
+                </div>
+                <div className=''>
                     <input
                         type='text'
                         ref={inputRef}
@@ -129,7 +196,7 @@ export const CourseAdd = () => {
                         value={keyword || ''}
                         onChange={handleChangeKeyword}
                         style={{ textTransform: 'uppercase' }}
-                        className='w-1/2 bg-gray-500 h-full rounded'
+                        className=''
                     />
                 </div>
 
@@ -149,10 +216,11 @@ export const CourseAdd = () => {
                 ))}
             </div>
 
-            <div className="flex flex-col items-start space-y-4 m-4">
+            <div className={styles.courses}>
                 {memoizedCourses.map((course) => (
-                    <div key={course.ids} className='bg-emerald-400 shadow-md rounded-lg w-120 p-4 flex flex-col items-start'>
+                    <div key={course.ids}  onClick={() => handleSelectItem(course)} className={styles.course}>
                         <p className="font-semibold">{course.subject_course}</p>
+                        <p className="font-semibold">{course.title}</p>
                     </div>
                 ))}
             </div>
