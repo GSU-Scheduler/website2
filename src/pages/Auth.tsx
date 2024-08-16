@@ -2,48 +2,38 @@ import React, { useState } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import './Auth.css';
 import { db } from '../config/firebase';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const Auth: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [error, setError] = useState<string | null>(null);
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [error, setError] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-    const handleAuth = async (e: React.FormEvent) => {
+    const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError(null);
+        setError(''); // Clear any previous error messages
+        setShowSuccessMessage(false); // Clear success message
 
-        if (isLogin) {
-            // Login logic
-            try {
-                const userDoc = await getDoc(doc(db, 'users', username));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    if (userData?.password === password) {
-                        setShowSuccessMessage(true);
-                    } else {
-                        setError('Invalid username or password');
-                    }
-                } else {
-                    setError('User not found');
-                }
-            } catch (err) {
-                setError('Error during login');
+        const auth = getAuth();
+
+        try {
+            if (isLogin) {
+                // Login logic
+                await signInWithEmailAndPassword(auth, email, password);
+                setShowSuccessMessage(true); // Show login success message
+            } else {
+                // Sign up logic
+                await createUserWithEmailAndPassword(auth, email, password);
+                setShowSuccessMessage(true); // Show signup success message
             }
-        } else {
-            // Signup logic
-            try {
-                const userDoc = await getDoc(doc(db, 'users', username));
-                if (userDoc.exists()) {
-                    setError('Username already taken');
-                } else {
-                    await setDoc(doc(db, 'users', username), { username, email, password });
-                    setShowSuccessMessage(true);
-                }
-            } catch (err) {
-                setError('Error during signup');
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('An unexpected error occurred');
             }
         }
     };
@@ -72,7 +62,7 @@ const Auth: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                     className="auth-input"
-                    required={!isLogin}
+                    required
                 />
                 <input
                     type="password"
