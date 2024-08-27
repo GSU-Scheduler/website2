@@ -739,28 +739,6 @@ const Home: React.FC = () => {
         </div>
       </div>
       <div className="flex-grow p-4 overflow-y-auto">
-        <header className="flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-4">
-            <button className="bg-blue-500 text-white px-3 py-2 rounded">
-              Share Schedule
-            </button>
-            <button className="bg-gray-700 text-white px-4 py-2 rounded">
-              Export
-            </button>
-          </div>
-          <div className="flex items-center space-x-3">
-            <select className="bg-gray-700 text-white px-4 py-2 rounded">
-              <option value="spring2024">Spring 2024</option>
-            </select>
-            <select className="bg-gray-700 text-white px-4 py-2 rounded">
-              <option value="primary">Primary</option>
-            </select>
-            <button className="bg-gray-700 text-white px-4 py-2 rounded">
-              ?
-            </button>
-          </div>
-        </header>
-
         <div className="flex">
           <div className="w-3/4 text-black ">
             <div className="flex justify-center">
