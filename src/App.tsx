@@ -9,17 +9,14 @@ import Auth from './pages/Auth';
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path='/about' element={<About />}/>
-          <Route path='/auth' element={<Auth />}/>
-        </Routes>
-      
-      </BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path='/about' element={<About />}/>
+        <Route path='/auth' element={<Auth />}/>
+      </Routes>
     </div>
-  );
+  );  
 }
 
 export default App;

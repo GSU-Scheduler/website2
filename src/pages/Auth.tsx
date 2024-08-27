@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import './Auth.css';
-import { db } from '../config/firebase';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const Auth: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
     const [error, setError] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const navigate = useNavigate();
 
     const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -24,10 +23,12 @@ const Auth: React.FC = () => {
                 // Login logic
                 await signInWithEmailAndPassword(auth, email, password);
                 setShowSuccessMessage(true); // Show login success message
+                navigate('/');
             } else {
                 // Sign up logic
                 await createUserWithEmailAndPassword(auth, email, password);
                 setShowSuccessMessage(true); // Show signup success message
+                navigate('/');
             }
         } catch (err) {
             if (err instanceof Error) {
@@ -47,15 +48,6 @@ const Auth: React.FC = () => {
             <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
             {error && <p className="error-message">{error}</p>}
             <form onSubmit={handleAuth} className="auth-form">
-                {!isLogin && (
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Username"
-                        className="auth-input"
-                    />
-                )}
                 <input
                     type="email"
                     value={email}
