@@ -1,49 +1,40 @@
 import React, { useState } from 'react';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import './Auth.css';
-import { db } from '../config/firebase';
 
 const Auth: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [error, setError] = useState<string | null>(null);
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const navigate = useNavigate();
 
-    const handleAuth = async (e: React.FormEvent) => {
+    const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError(null);
+        setError(''); // Clear any previous error messages
+        setShowSuccessMessage(false); // Clear success message
 
-        if (isLogin) {
-            // Login logic
-            try {
-                const userDoc = await getDoc(doc(db, 'users', username));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    if (userData?.password === password) {
-                        setShowSuccessMessage(true);
-                    } else {
-                        setError('Invalid username or password');
-                    }
-                } else {
-                    setError('User not found');
-                }
-            } catch (err) {
-                setError('Error during login');
+        const auth = getAuth();
+
+        try {
+            if (isLogin) {
+                // Login logic
+                await signInWithEmailAndPassword(auth, email, password);
+                setShowSuccessMessage(true); // Show login success message
+                navigate('/');
+            } else {
+                // Sign up logic
+                await createUserWithEmailAndPassword(auth, email, password);
+                setShowSuccessMessage(true); // Show signup success message
+                navigate('/');
             }
-        } else {
-            // Signup logic
-            try {
-                const userDoc = await getDoc(doc(db, 'users', username));
-                if (userDoc.exists()) {
-                    setError('Username already taken');
-                } else {
-                    await setDoc(doc(db, 'users', username), { username, email, password });
-                    setShowSuccessMessage(true);
-                }
-            } catch (err) {
-                setError('Error during signup');
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('An unexpected error occurred');
             }
         }
     };
@@ -57,22 +48,13 @@ const Auth: React.FC = () => {
             <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
             {error && <p className="error-message">{error}</p>}
             <form onSubmit={handleAuth} className="auth-form">
-                {!isLogin && (
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Username"
-                        className="auth-input"
-                    />
-                )}
                 <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                     className="auth-input"
-                    required={!isLogin}
+                    required
                 />
                 <input
                     type="password"

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
-import { dayjsLocalizer } from "react-big-calendar";
+import { dayjsLocalizer, dateFnsLocalizer } from "react-big-calendar";
 import Calendar from "../Calendar";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import "./BasicCalendar.css";
@@ -9,6 +9,8 @@ import withDragAndDrop, {
   withDragAndDropProps,
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useColor } from "../components/ColorContext";
 
 // drag and drop functionality
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -21,10 +23,9 @@ dayjs.extend(customParseFormat);
 // Calendar receives events prop
 // TODO: event state
 
-
 type BasicCalendarProps = {
   calendarEvents: Array<Object>;
-}
+};
 
 // const events = [
 //   {
@@ -93,14 +94,29 @@ const components = {
       | Iterable<ReactNode>
       | null
       | undefined;
+    event: {
+      start: Date;
+      end: Date;
+    };
   }) => {
-    const eventType = "Event"
+    const { color } = useColor();
+
+    const { title, event } = props;
+    const startTime = dayjs(event.start).format("h:mm A");
+    const endTime = dayjs(event.end).format("h:mm A");
+    const eventType = "Event";
     switch (eventType) {
       // TODO later: Transfer to individual CourseEvent.tsx and UserEvent.tsx components
       case "Event":
         return (
-          <div className="h-full p-2 bg-purple-50 rounded-xl border-4 border-purple-500 text-black">
+          <div
+            className="h-full p-2 bg-purple-50 rounded-xl border-4 text-black"
+            style={{
+              borderColor: color, // Apply the selected color here
+            }}
+          >
             <h2 className="font-medium">{props.title}</h2>
+            <p className="font-light text-sm">{`${startTime} - ${endTime}`}</p>
             {/* <p className="font-light text-sm">{props.event.data.time}</p> */}
           </div>
         );
@@ -133,9 +149,9 @@ const components = {
   },
 };
 
-export default function BasicCalendar({calendarEvents}: BasicCalendarProps) {
+export default function BasicCalendar({ calendarEvents }: BasicCalendarProps) {
   return (
-    <section className="flex flex-col w-[1100px] h-[769px] bg-gray-100 rounded-3xl overflow-hidden">
+    <section className="flex flex-col w-[1200px] h-[769px] bg-gray-100 rounded-3xl overflow-hidden">
       <div className="flex p-6 justify-center items-center relative">
         <div className="absolute hidden sm:block left-0 ml-6 py-2 px-4 rounded-2xl text-xs border-2 shadow-md bg-transparent font-semibold">
           0 Credits
@@ -160,7 +176,7 @@ export default function BasicCalendar({calendarEvents}: BasicCalendarProps) {
           min={dayjs("07:00", "H:m").toDate()}
           max={dayjs("21:00", "H:m").toDate()}
           components={components}
-          draggableAccessor={"isDraggable"}
+          draggableAccessor={(event) => event.isDraggable}
           resizable={true}
           localizer={localizer}
         />
