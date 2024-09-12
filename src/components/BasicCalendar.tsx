@@ -10,7 +10,7 @@ import withDragAndDrop, {
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useColor } from "../components/ColorContext";
+// import { useColor } from "../components/ColorContext";
 
 // drag and drop functionality
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -26,6 +26,38 @@ dayjs.extend(customParseFormat);
 type BasicCalendarProps = {
   calendarEvents: Array<Object>;
 };
+
+type DnDCalendarProps = {
+  events: Array<Object>;
+  defaultView: string;
+  views: Array<string>;
+  toolbar: boolean;
+  formats: {
+    dayFormat: (date: Date) => string;
+  };
+  min: Date;
+  max: Date;
+  components: {
+    event: (props: {
+      title:
+        | string
+        | number
+        | boolean
+        | ReactElement<any, string | JSXElementConstructor<any>>
+        | Iterable<ReactNode>
+        | null
+        | undefined;
+      event: {
+        start: Date;
+        end: Date;
+      };
+    }) => JSX.Element;
+  };
+  draggableAccessor: (event: Object) => boolean;
+  resizable: boolean;
+  localizer: any;
+};
+
 
 // const events = [
 //   {
@@ -85,22 +117,8 @@ type BasicCalendarProps = {
 // TODO later: Transfer to individual CourseEvent.tsx and UserEvent.tsx components
 // separate prop types to type object
 const components = {
-  event: (props: {
-    title:
-      | string
-      | number
-      | boolean
-      | ReactElement<any, string | JSXElementConstructor<any>>
-      | Iterable<ReactNode>
-      | null
-      | undefined;
-    event: {
-      start: Date;
-      end: Date;
-    };
-  }) => {
-    const { color } = useColor();
-
+  event: (props: { title: any; event?: any; }) => {
+    // const { color } = useColor();
     const { title, event } = props;
     const startTime = dayjs(event.start).format("h:mm A");
     const endTime = dayjs(event.end).format("h:mm A");
@@ -112,7 +130,7 @@ const components = {
           <div
             className="h-full p-2 bg-purple-50 rounded-xl border-4 text-black"
             style={{
-              borderColor: color, // Apply the selected color here
+              // borderColor: color, // Apply the selected color here
             }}
           >
             <h2 className="font-medium">{props.title}</h2>
@@ -151,20 +169,20 @@ const components = {
 
 export default function BasicCalendar({ calendarEvents }: BasicCalendarProps) {
   return (
-    <section className="flex flex-col w-[1200px] h-[769px] bg-gray-100 rounded-3xl overflow-hidden">
-      <div className="flex p-6 justify-center items-center relative">
-        <div className="absolute hidden sm:block left-0 ml-6 py-2 px-4 rounded-2xl text-xs border-2 shadow-md bg-transparent font-semibold">
+    <section className="flex flex-col w-[1000px] h-[735px] bg-zinc-50 rounded-3xl overflow-hidden border py-1 shadow">
+      <div className="flex p-4 justify-center items-center relative">
+        <div className="absolute hidden sm:block left-0 ml-4 py-2 px-4 rounded-2xl text-xs border shadow-sm font-normal">
           0 Credits
         </div>
-        <button className="bg-gray-300 text-gray-700 px-2 rounded">
+        <button className="text-zinc-900 px-2 rounded-full border">
           {"<"}
         </button>
-        <h2 className="font-semibold tracking-wide mx-4">Spring Semester</h2>
-        <button className="bg-gray-300 text-gray-700 px-2 rounded">
+        <h2 className="font-normal tracking-wide mx-6">Spring Semester</h2>
+        <button className="text-zinc-900 px-2 rounded-full border">
           {">"}
         </button>
       </div>
-      <div className="bg-gray-100 h-[100%]">
+      <div className="bg-zinc-50 h-[100%]">
         <DnDCalendar
           events={calendarEvents}
           defaultView={"work_week"}
@@ -176,7 +194,6 @@ export default function BasicCalendar({ calendarEvents }: BasicCalendarProps) {
           min={dayjs("07:00", "H:m").toDate()}
           max={dayjs("21:00", "H:m").toDate()}
           components={components}
-          draggableAccessor={(event) => event.isDraggable}
           resizable={true}
           localizer={localizer}
         />

@@ -449,96 +449,218 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex h-90 bg-background text-gray-200">
-      <div className="w-1/6 bg-sidebar p-4 text-gray-200">
-        <div className="mb-8">
-          <div className="mb-8 logo-container">
-            <img
-              src={require("../logo.png")}
-              alt="Logo"
-              className="mb-4 small-logo"
-            />
-          </div>
-          <ul className="flex space-x-4 mb-8 justify-center">
-            <li>
+    <main className="flex bg-zinc-800 text-zinc-50 max-h-[800px]">
+      <div className="w-1/6 flex flex-col max-h-[735px] py-1">
+        <div className="overflow-scroll">
+          <div className="">
+            <div className="flex justify-center w-full mb-4 shadow rounded-lg text-xs">
               <button
-                className={`block p-2 rounded ${
-                  showCourses ? "bg-gray-700" : "bg-gray-500"
+                className={`px-2 py-3 w-1/2 rounded-l-lg border-y border-l ${
+                  showCourses
+                    ? "bg-zinc-50 text-zinc-900 font-medium"
+                    : "bg-zinc-200 text-zinc-400 shadow-inner"
                 }`}
                 onClick={() => setShowCourses(true)}
               >
                 Courses
               </button>
-            </li>
-            <li>
               <button
-                className={`block p-2 rounded ${
-                  !showCourses ? "bg-gray-700" : "bg-gray-500"
+                className={`px-1 py-2 w-1/2 rounded-r-lg border-y border-r ${
+                  !showCourses
+                    ? "bg-zinc-50 text-zinc-900 font-medium"
+                    : "bg-zinc-200 text-zinc-400 shadow-inner"
                 }`}
                 onClick={() => setShowCourses(false)}
               >
                 Events
               </button>
-            </li>
-          </ul>
-          {!showCourses && (
-            <div className="mb-8">
-              <h2 className="text-lg font-bold mb-4">Add Event</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label htmlFor="title" className="block mb-2">
-                    Title
-                  </label>
+            </div>
+            {!showCourses && (
+              <div className="mb-8">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <label htmlFor="title" className="block mb-2">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      id="title"
+                      name="title"
+                      placeholder="ex. Piano Lessons"
+                      className="w-full bg-transparent outline-none text-zinc-50 p-2 border-b shadow"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      required
+                    />
+                  </div> 
+                  <div className="mb-4">
+                    <label htmlFor="days_events" className="block mb-2">
+                      Days
+                    </label>
+                    <Select
+                      isMulti
+                      value={days_events}
+                      onChange={handleDaysChange}
+                      options={dayOptions}
+                      className=""
+                      classNamePrefix="select"
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor: "",
+                          borderColor: "",
+                          color: "#",
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isSelected
+                            ? ""
+                            : "",
+                          color: "#18181b",
+                          "&:hover": {
+                            backgroundColor: "#d4d4d8",
+                          },
+                        }),
+                        multiValue: (provided) => ({
+                          ...provided,
+                          backgroundColor: "#fafafa",
+                          color: "#18181b",
+                        }),
+                        multiValueLabel: (provided) => ({
+                          ...provided,
+                          color: "#18181b",
+                        }),
+                        multiValueRemove: (provided) => ({
+                          ...provided,
+                          color: "#18181b",
+                          "&:hover": {
+                            backgroundColor: "#FF0000",
+                            color: "#fff",
+                          },
+                        }),
+                      }}
+                    />
+                  </div>
+                  <div className="mb-8">
+                    <TimeInput
+                      label="Start Time"
+                      time={startTime}
+                      setTime={setStartTime}
+                    />
+                    <TimeInput
+                      label="End Time"
+                      time={endTime}
+                      setTime={setEndTime}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg shadow w-full transition-colors duration-300"
+                  >
+                    Add Event
+                  </button>
+                </form>
+              </div>
+            )}
+            {showCourses && (
+              <>
+                <div>
                   <input
                     type="text"
-                    id="title"
-                    name="title"
-                    className="w-full bg-gray-700 text-white p-2 rounded"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                  />
+                    ref={inputRef}
+                    placeholder="+ XXX 0000"
+                    value={keyword || ""}
+                    onChange={handleChangeKeyword}
+                    style={{ textTransform: "uppercase" }}
+                    className="outline-none w-full bg-transparent border-b p-2 placeholder-zinc-500"
+                  ></input>
+                  {loading && <p>Loading...</p>}
+                  {error && <p>{error}</p>}
+                  {!loading &&
+                    memoizedCourses.length === 0 &&
+                    keyword &&
+                    !error && <p>No courses found matching '{keyword}'</p>}
                 </div>
-                <div className="mb-4">
-                  <label htmlFor="days_events" className="block mt-2 mb-2">
-                    Days
+
+                <div
+                  className="flex flex-col items-center space-y-4 overflow-y-scroll mt-2"
+                  style={{ maxHeight: "400px" }}
+                >
+                  {memoizedCourses.slice(0, 10).map((course) => (
+                    <div
+                      key={course.id}
+                      className="bg-zinc-50 text-zinc-900 shadow rounded-lg text-sm w-full p-1"
+                      style={{
+                        width: "", // Set the width in pixels as needed
+                        padding: "", // Optional, padding is already set by p-4, but you can adjust as needed
+                        margin: "",
+                        cursor: "pointer", // Change cursor to indicate it's clickable
+                      }}
+                      onClick={() => handleCourseClick(course)} // Add onClick handler here
+                    >
+                      <p className="font-medium">
+                        {course.subject} {course.courseNumber} - {course.hours}{" "}
+                        credits
+                      </p>
+                      <p className="text-xs">{course.title}</p>
+                      <p className="text-xs">
+                        {course.days}- {course.time}
+                      </p>
+                      <p className="text-xs">Building: {course.building}</p>
+                      <p className="text-xs">Campus: {course.campus}</p>
+                      <p className="text-xs">
+                        Instructor: {course.primaryInstructor}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {showColorSelector && (
+                  <div className="mt-4 items-center justify-center">
+                    <ColorSelector />
+                  </div>
+                )}
+
+                <div className="">
+                  <label htmlFor="deliveryMode" className="block mt-2 mb-2">
+                    Delivery Mode
                   </label>
                   <Select
                     isMulti
-                    value={days_events}
-                    onChange={handleDaysChange}
-                    options={dayOptions}
+                    value={selectedDeliveryModes}
+                    onChange={handleDeliveryModeChange}
+                    options={options}
                     className="basic-multi-select"
                     classNamePrefix="select"
                     styles={{
                       control: (provided) => ({
                         ...provided,
-                        backgroundColor: "#4A4A4A",
-                        borderColor: "#4A4A4A",
-                        color: "#fff",
+                        backgroundColor: "",
+                        color: "",
                       }),
                       option: (provided, state) => ({
                         ...provided,
                         backgroundColor: state.isSelected
-                          ? "#6B7280"
-                          : "#4A4A4A",
-                        color: "#fff",
+                          ? ""
+                          : "",
+                        color: "#18181b",
                         "&:hover": {
-                          backgroundColor: "#6B7280",
+                          backgroundColor: "#d4d4d8",
                         },
                       }),
                       multiValue: (provided) => ({
                         ...provided,
-                        backgroundColor: "#6B7280",
-                        color: "#fff",
+                        backgroundColor: "#fafafa",
+                        color: "#18181b",
                       }),
                       multiValueLabel: (provided) => ({
                         ...provided,
-                        color: "#fff",
+                        color: "#18181b",
                       }),
                       multiValueRemove: (provided) => ({
                         ...provided,
-                        color: "#fff",
+                        color: "#18181b",
                         "&:hover": {
                           backgroundColor: "#FF0000",
                           color: "#fff",
@@ -547,211 +669,77 @@ const Home: React.FC = () => {
                     }}
                   />
                 </div>
-                <div className="mb-8">
-                  <TimeInput
-                    label="Start Time"
-                    time={startTime}
-                    setTime={setStartTime}
-                  />
-                  <TimeInput
-                    label="End Time"
-                    time={endTime}
-                    setTime={setEndTime}
-                  />
+
+                <div className="mb-4">
+                  <label className="block mt-4 mb-2">Campus</label>
+                  <select
+                    value={selectedCampus}
+                    onChange={handleCampusChange}
+                    className="outline-none block w-full bg-zinc-800 text-zinc-50 p-2 rounded border"
+                  >
+                    <option value="Atlanta">Atlanta</option>
+                    <option value="Alpharetta">Alpharetta</option>
+                    <option value="Clarkston">Clarkston</option>
+                    <option value="Decatur">Decatur</option>
+                    <option value="Dunwoody">Dunwoody</option>
+                    <option value="Newton">Newton</option>
+                  </select>
                 </div>
 
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded w-full"
-                >
-                  Add Event
-                </button>
-              </form>
-            </div>
-          )}
-          {showCourses && (
-            <>
-              <div>
-                <input
-                  type="text"
-                  ref={inputRef}
-                  placeholder="+ XXX 0000"
-                  value={keyword || ""}
-                  onChange={handleChangeKeyword}
-                  style={{ textTransform: "uppercase" }}
-                  className="block w-full bg-gray-700 p-2 rounded"
-                ></input>
-                {loading && <p>Loading...</p>}
-                {error && <p>{error}</p>}
-                {!loading &&
-                  memoizedCourses.length === 0 &&
-                  keyword &&
-                  !error && <p>No courses found matching '{keyword}'</p>}
-              </div>
-
-              <div
-                className="flex flex-col items-center space-y-4 overflow-y-scroll mt-2"
-                style={{ maxHeight: "400px" }}
-              >
-                {memoizedCourses.slice(0, 10).map((course) => (
-                  <div
-                    key={course.id}
-                    className="bg-gray-700 shadow-md rounded-lg h-40 p-4 flex flex-col items-start text-sm"
-                    style={{
-                      width: "240px", // Set the width in pixels as needed
-                      padding: "10px", // Optional, padding is already set by p-4, but you can adjust as needed
-                      margin: "10px",
-                      cursor: "pointer", // Change cursor to indicate it's clickable
-                    }}
-                    onClick={() => handleCourseClick(course)} // Add onClick handler here
-                  >
-                    <p className="font-semibold">
-                      {course.subject} {course.courseNumber} - {course.hours}{" "}
-                      credits
-                    </p>
-                    <p className="text-xs">{course.title}</p>
-                    <p className="text-xs">
-                      {course.days}- {course.time}
-                    </p>
-                    <p className="text-xs">Building: {course.building}</p>
-                    <p className="text-xs">Campus: {course.campus}</p>
-                    <p className="text-xs">
-                      Instructor: {course.primaryInstructor}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {showColorSelector && (
-                <div className="mt-4 items-center justify-center">
-                  <ColorSelector />
+                <div className="">
+                  {CRN.map((crn, index) => (
+                    <div key={index} className="flex mb-4">
+                      <input
+                        type="text"
+                        value={crn}
+                        onChange={(e) => handleCRNChange(index, e.target.value)}
+                        className="w-full bg-transparent border-b text-zinc-50 placeholder-zinc-500 outline-none p-2 flex-grow justify-center items-center"
+                        placeholder="+ CRN"
+                      />
+                      {CRN.length > 1 && (
+                        <button
+                          onClick={() => removeCRNField(index)}
+                          className="bg-red-500 text-zinc-900 px-4 py-2 rounded-lg"
+                        >
+                          -
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {CRN.length < 6 && (
+                    <button
+                      onClick={addCRNField}
+                      className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg shadow w-full transition-colors duration-300"
+                    >
+                      Add Another CRN
+                    </button>
+                  )}
                 </div>
-              )}
 
-              <div className="">
-                <label htmlFor="deliveryMode" className="block mt-2 mb-2">
-                  Delivery Mode
-                </label>
-                <Select
-                  isMulti
-                  value={selectedDeliveryModes}
-                  onChange={handleDeliveryModeChange}
-                  options={options}
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  styles={{
-                    control: (provided) => ({
-                      ...provided,
-                      backgroundColor: "#4A4A4A",
-                      borderColor: "#4A4A4A",
-                      color: "#fff",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected ? "#6B7280" : "#4A4A4A",
-                      color: "#fff",
-                      "&:hover": {
-                        backgroundColor: "#6B7280",
-                      },
-                    }),
-                    multiValue: (provided) => ({
-                      ...provided,
-                      backgroundColor: "#6B7280",
-                      color: "#fff",
-                    }),
-                    multiValueLabel: (provided) => ({
-                      ...provided,
-                      color: "#fff",
-                    }),
-                    multiValueRemove: (provided) => ({
-                      ...provided,
-                      color: "#fff",
-                      "&:hover": {
-                        backgroundColor: "#FF0000",
-                        color: "#fff",
-                      },
-                    }),
-                  }}
-                />
-              </div>
-
-              <div className="mb-8">
-                <label className="block mt-4 mb-2">Campus</label>
-                <select
-                  value={selectedCampus}
-                  onChange={handleCampusChange}
-                  className="block w-full bg-gray-700 p-2 rounded"
-                >
-                  <option value="Atlanta">Atlanta</option>
-                  <option value="Alpharetta">Alpharetta</option>
-                  <option value="Clarkston">Clarkston</option>
-                  <option value="Decatur">Decatur</option>
-                  <option value="Dunwoody">Dunwoody</option>
-                  <option value="Newton">Newton</option>
-                </select>
-              </div>
-
-              <div className="">
-                {CRN.map((crn, index) => (
-                  <div key={index} className="flex mb-1">
-                    <input
-                      type="text"
-                      value={crn}
-                      onChange={(e) => handleCRNChange(index, e.target.value)}
-                      className="w-full bg-gray-700 text-white p-2 rounded mr-2 flex-grow justify-center items-center"
-                      placeholder="CRN"
-                    />
-                    {CRN.length > 1 && (
-                      <button
-                        onClick={() => removeCRNField(index)}
-                        className="bg-red-500 text-white px-4 py-2 rounded"
-                      >
-                        -
-                      </button>
-                    )}
-                  </div>
-                ))}
-                {CRN.length < 6 && (
-                  <button
-                    onClick={addCRNField}
-                    className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-2"
-                  >
-                    Add Another CRN
+                <div className="">
+                  <button className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg shadow mt-2 w-full transition-colors duration-300">
+                    Submit
                   </button>
-                )}
-              </div>
-
-              <div className="mb-8">
-                <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
-                  Submit
-                </button>
-              </div>
-              <div className="mt-8 space-y-4">
-                <button className="block p-2 bg-gray-700 rounded w-full">
-                  Send Feedback
-                </button>
-                <button className="block p-2 bg-gray-700 rounded w-full">
-                  GitHub
-                </button>
-              </div>
-            </>
-          )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <div className="flex-grow p-4 overflow-y-auto">
+      <div className="overflow-y-auto">
         <div className="flex">
-          <div className="w-3/4 text-black ">
+          <div className="w-3/4 text-black mx-4">
             <div className="flex justify-center">
               <BasicCalendar calendarEvents={events} />
             </div>
             <div className="grid grid-cols-6 gap-4 justify-items-center"></div>
           </div>
-          <div className="w-1/4 bg-gray-300 rounded-3xl shadow-lg ml-4">
+          <div className="w-1/4 rounded-3xl shadow">
             <Map />
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

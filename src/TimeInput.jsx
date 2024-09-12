@@ -35,7 +35,7 @@ const TimeInput = ({ label, time, setTime }) => {
             onChange={handleHourChange}
             maxLength="2"
             placeholder="HH"
-            className="w-12 bg-gray-700 text-white p-2 rounded mr-2"
+            className="w-12 outline-none bg-transparent text-zinc-50 p-1.5 rounded border shadow mr-2 placeholder-zinc-500"
             required
           />
           <span>:</span>
@@ -45,7 +45,7 @@ const TimeInput = ({ label, time, setTime }) => {
             onChange={handleMinuteChange}
             maxLength="2"
             placeholder="MM"
-            className="w-12 bg-gray-700 text-white p-2 rounded mx-2"
+            className="w-12 outline-none bg-transparent text-zinc-50 p-1.5 rounded border shadow mx-2 placeholder-zinc-500"
             required
           />
           <Select
@@ -57,16 +57,15 @@ const TimeInput = ({ label, time, setTime }) => {
             styles={{
               control: (provided) => ({
                 ...provided,
-                backgroundColor: '#4A4A4A',
-                borderColor: '#4A4A4A',
-                color: '#fff',
+                backgroundColor: '',
+                color: '#e2e8f0',
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#6B7280' : '#4A4A4A',
-                color: '#fff',
+                backgroundColor: '#f8fafc',
+                color: '#0f172a',
                 '&:hover': {
-                  backgroundColor: '#6B7280',
+                  backgroundColor: '#d4d4d8',
                 },
               }),
             }}
