@@ -449,11 +449,11 @@ const Home: React.FC = () => {
   };
 
   return (
-    <main className="flex bg-zinc-800 text-zinc-50 max-h-[800px]">
-      <div className="w-1/6 flex flex-col max-h-[735px] py-1">
-        <div className="overflow-scroll">
+    <main className="flex bg-zinc-800 text-zinc-50 min-h-[85dvh]">
+      <div className="w-1/6 flex flex-col py-1">
+        <div className="overflow-y-auto">
           <div className="">
-            <div className="flex justify-center w-full mb-4 shadow rounded-lg text-xs">
+            <div className="flex justify-center w-full mb-4 shadow-lg rounded-lg text-xs">
               <button
                 className={`px-2 py-3 w-1/2 rounded-l-lg border-y border-l ${
                   showCourses
@@ -465,7 +465,7 @@ const Home: React.FC = () => {
                 Courses
               </button>
               <button
-                className={`px-1 py-2 w-1/2 rounded-r-lg border-y border-r ${
+                className={`px-2 py-3 w-1/2 rounded-r-lg border-y border-r ${
                   !showCourses
                     ? "bg-zinc-50 text-zinc-900 font-medium"
                     : "bg-zinc-200 text-zinc-400 shadow-inner"
@@ -584,7 +584,7 @@ const Home: React.FC = () => {
                 </div>
 
                 <div
-                  className="flex flex-col items-center space-y-4 overflow-y-scroll mt-2"
+                  className="flex flex-col items-center space-y-4 overflow-y-auto mt-2"
                   style={{ maxHeight: "400px" }}
                 >
                   {memoizedCourses.slice(0, 10).map((course) => (

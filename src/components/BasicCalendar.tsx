@@ -169,7 +169,7 @@ const components = {
 
 export default function BasicCalendar({ calendarEvents }: BasicCalendarProps) {
   return (
-    <section className="flex flex-col w-[1000px] h-[735px] bg-zinc-50 rounded-3xl overflow-hidden border py-1 shadow">
+    <section className="flex flex-col w-[1000px] min-h-[85dvh] bg-zinc-50 rounded-3xl overflow-auto border py-1 shadow">
       <div className="flex p-4 justify-center items-center relative">
         <div className="absolute hidden sm:block left-0 ml-4 py-2 px-4 rounded-2xl text-xs border shadow-sm font-normal">
           0 Credits

@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="mt-auto text-end space-x-4 text-zinc-500 py-4">
+    <footer className="my-auto text-end space-x-4 text-zinc-500 py-4">
       <small>
         <a href="https://github.com/GSU-Scheduler" className="hover:text-zinc-50 hover:underline" target="_blank">
           See our GitHub{" "}
